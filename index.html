@@ -4,34 +4,47 @@
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
 	</head>
 	<body>
-	    <div id='messagesDiv'></div>
+	  
+	  <div id='messagesDiv' style="border: 1px solid lightgray; width:365px"></div>
 		<input type="text" id="name" placeholder='Name'>
 		<input type="text" id="message" placeholder='Message'>
 		<input type="submit" value="Post" id="submit">
-		<script>
-			//var data = new Firebase('https://k3zqzb9cdh9.firebaseio-demo.com/');
-			
+		<span class="warning" style="color: red" hidden>You must enter something in the Name and message fields </span>
+		<script>			
+			//Connect to your firebase data store
 			var data = new Firebase('https://amber-fire-7401.firebaseio.com/');
 
 			$('#submit').click(function(event) {
-				//if(event.keyCode === 13){
-					//var colors = ["green", "blue", "red", "purple", "yellow", "white", "black"] (unused)
+
+
 					var name = $('#name').val();
-					var text = $('#message').val()
-					text = text.split('').reverse().join('');
-					data.push({name: name, text: text});
-					$('#message').val('');
-					$('#name').val('')
-				//}
+					var text = $('#message').val();
+					if(text && name){
+						$('.warning').hide();
+						text = text.split('').reverse().join('');
+
+						//adds a child object to data store
+						data.push({name: name, text: text});
+
+						$('#message').val('');
+						$('#name').val('');
+					} else {
+						$('.warning').show();
+					}
 			});
+
+			//Events are available on the data store object
+			//This one triggers when the data.push is completed
+			//and a child has been added to your data store
 			data.on('child_added', function(snapshot) {
 			  	var message = snapshot.val();
 				displayChatMessage(message.name, message.text);
 			});
+
 			function displayChatMessage(name, text) {
 		        $('<div/>').text(text).prepend($('<em/>').text(name+': ')).appendTo($('#messagesDiv'));
 		        $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
-		    };
+		    }
 		</script>
 	</body>
 </html>
