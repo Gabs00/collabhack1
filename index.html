@@ -15,8 +15,10 @@
 
 			$('#submit').click(function(event) {
 				//if(event.keyCode === 13){
+					//var colors = ["green", "blue", "red", "purple", "yellow", "white", "black"] (unused)
 					var name = $('#name').val();
-					var text = $('#message').val();
+					var text = $('#message').val()
+					text = text.split('').reverse().join('');
 					data.push({name: name, text: text});
 					$('#message').val('');
 					$('#name').val('')
