@@ -1,0 +1,35 @@
+<html>
+	<head>
+		<script src='https://cdn.firebase.com/js/client/1.0.15/firebase.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
+	</head>
+	<body>
+	    <div id='messagesDiv'></div>
+		<input type="text" id="name" placeholder='Name'>
+		<input type="text" id="message" placeholder='Message'>
+		<input type="submit" value="Post" id="submit">
+		<script>
+			//var data = new Firebase('https://k3zqzb9cdh9.firebaseio-demo.com/');
+			
+			var data = new Firebase('https://amber-fire-7401.firebaseio.com/');
+
+			$('#submit').click(function(event) {
+				//if(event.keyCode === 13){
+					var name = $('#name').val();
+					var text = $('#message').val();
+					data.push({name: name, text: text});
+					$('#message').val('');
+					$('#name').val('')
+				//}
+			});
+			data.on('child_added', function(snapshot) {
+			  	var message = snapshot.val();
+				displayChatMessage(message.name, message.text);
+			});
+			function displayChatMessage(name, text) {
+		        $('<div/>').text(text).prepend($('<em/>').text(name+': ')).appendTo($('#messagesDiv'));
+		        $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
+		    };
+		</script>
+	</body>
+</html>
